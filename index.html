@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Promoter Track Sheet</title>
+  <meta name="description" content="Capture garage and reseller field visits with GPS location and photos.">
+  <meta name="theme-color" content="#0b2a4a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-row">
+      <h1>Promoter Track Sheet</h1>
+      <span id="netStatus" class="net">Online</span>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <button type="button" class="tab is-active" data-tab="new">New visit</button>
+      <button type="button" class="tab" data-tab="visits">My visits <span id="visitCount" class="count">0</span></button>
+    </nav>
+  </header>
+
+  <div id="setupBanner" class="banner" hidden>
+    <strong>Not connected yet.</strong> Visits are kept on this phone only until the Google Sheet is connected.
+  </div>
+
+  <main>
+    <form id="visitForm" novalidate>
+      <section class="card">
+        <h2>Visit</h2>
+        <div class="field" data-field="promoterName">
+          <label for="promoterName">Promoter name <span class="req">*</span></label>
+          <input id="promoterName" name="promoterName" autocomplete="name" autocapitalize="words">
+          <p class="hint">Remembered on this phone.</p>
+          <p class="error"></p>
+        </div>
+
+        <div class="gps" id="gpsBox" data-state="searching">
+          <div class="gps-head">
+            <span class="gps-dot" aria-hidden="true"></span>
+            <div>
+              <p class="gps-title" id="gpsTitle">Finding your location…</p>
+              <p class="gps-detail" id="gpsDetail">Stand outside if possible.</p>
+            </div>
+          </div>
+          <div class="gps-actions">
+            <button type="button" class="btn-small" id="gpsRetry">Refresh location</button>
+            <a class="btn-small" id="gpsMap" target="_blank" rel="noopener" hidden>View on map</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Garage details</h2>
+        <div class="field" data-field="garageName">
+          <label for="garageName">Reseller/Garage name <span class="req">*</span></label>
+          <input id="garageName" name="garageName" autocapitalize="words">
+          <p class="error"></p>
+        </div>
+
+        <fieldset class="field" data-field="garageType">
+          <legend>Type of garage <span class="req">*</span></legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="garageType" value="2W"><span>2W</span></label>
+            <label class="choice"><input type="radio" name="garageType" value="4W"><span>4W</span></label>
+            <label class="choice"><input type="radio" name="garageType" value="Other"><span>Other</span></label>
+          </div>
+          <input id="garageTypeOther" name="garageTypeOther" class="reveal" placeholder="Type of garage" aria-label="Other type of garage" hidden>
+          <p class="error"></p>
+        </fieldset>
+
+        <div class="field" data-field="mobile">
+          <label for="mobile">Mobile number</label>
+          <input id="mobile" name="mobile" type="tel" inputmode="tel" autocomplete="off" placeholder="10-digit number">
+          <p class="error"></p>
+        </div>
+
+        <div class="field" data-field="address">
+          <label for="address">Address <span class="req">*</span></label>
+          <textarea id="address" name="address" rows="3"></textarea>
+          <p class="error"></p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Sales and competition</h2>
+        <div class="field" data-field="monthlySales">
+          <label for="monthlySales">Total monthly sales (all companies) <span class="req">*</span></label>
+          <input id="monthlySales" name="monthlySales">
+          <p class="error"></p>
+        </div>
+
+        <fieldset class="field" data-field="suppliers">
+          <legend>Current supplier company <span class="req">*</span></legend>
+          <p class="hint">Select all that apply.</p>
+          <div class="choices wrap">
+            <label class="choice"><input type="checkbox" name="suppliers" value="Castrol"><span>Castrol</span></label>
+            <label class="choice"><input type="checkbox" name="suppliers" value="Motul"><span>Motul</span></label>
+            <label class="choice"><input type="checkbox" name="suppliers" value="Servo"><span>Servo</span></label>
+            <label class="choice"><input type="checkbox" name="suppliers" value="Total"><span>Total</span></label>
+            <label class="choice"><input type="checkbox" name="suppliers" value="Other"><span>Other</span></label>
+          </div>
+          <input id="suppliersOther" name="suppliersOther" class="reveal" placeholder="Other company names" aria-label="Other supplier companies" hidden>
+          <p class="error"></p>
+        </fieldset>
+
+        <div class="field" data-field="topGrades">
+          <label for="topGrades">High selling grade names <span class="req">*</span></label>
+          <input id="topGrades" name="topGrades" placeholder="e.g. Futura G Plus, Castrol Magnatec, Mobil 1">
+          <p class="error"></p>
+        </div>
+
+        <div class="field" data-field="displayBoard">
+          <label for="displayBoard">Display board by which company</label>
+          <input id="displayBoard" name="displayBoard">
+          <p class="error"></p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Servo</h2>
+        <fieldset class="field" data-field="servoAvailable">
+          <legend>Servo grades available <span class="req">*</span></legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="servoAvailable" value="Yes"><span>Yes</span></label>
+            <label class="choice"><input type="radio" name="servoAvailable" value="No"><span>No</span></label>
+          </div>
+          <p class="error"></p>
+        </fieldset>
+
+        <fieldset class="field" data-field="needBoard">
+          <legend>Need Servo display board <span class="req">*</span></legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="needBoard" value="Yes"><span>Yes</span></label>
+            <label class="choice"><input type="radio" name="needBoard" value="No"><span>No</span></label>
+          </div>
+          <p class="error"></p>
+        </fieldset>
+      </section>
+
+      <section class="card">
+        <h2>Photos</h2>
+        <p class="hint">Date, time and GPS are printed on each photo.</p>
+        <div class="photos" id="photos"></div>
+      </section>
+
+      <div class="submit-bar">
+        <button type="submit" class="btn-primary" id="saveBtn">Save visit</button>
+      </div>
+    </form>
+
+    <section id="visitsView" hidden>
+      <div class="visits-head">
+        <p id="visitsSummary" class="visits-summary"></p>
+        <button type="button" class="btn-small" id="syncBtn">Send now</button>
+      </div>
+      <ul id="visitList" class="visit-list"></ul>
+      <p id="visitsEmpty" class="empty" hidden>No visits saved on this phone yet.</p>
+    </section>
+  </main>
+
+  <dialog id="confirmDialog">
+    <form method="dialog">
+      <h3 id="confirmTitle"></h3>
+      <p id="confirmBody"></p>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn-small">Go back</button>
+        <button value="ok" class="btn-small is-strong">Save anyway</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
